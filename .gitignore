@@ -1,3 +1,5 @@
+vendor/**
+.idea/**
 
 # Created by https://www.gitignore.io/api/go,macos,webstorm
 
