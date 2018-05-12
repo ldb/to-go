@@ -6,19 +6,19 @@ Backend for a small ToDo App, using the [Gin Framework](https://github.com/gin-g
 
 The API consists of the following endpoints:
 
-- GET `/tasks`
+- GET `/tasks`  
 Returns all tasks
 
-- POST `/tasks`
+- POST `/tasks`  
 Creates a new Task
 
-- GET `/tasks/:id
+- GET `/tasks/:id`  
 Returns a specific task by Id
 
-- PUT `/tasks/:id`
+- PUT `/tasks/:id`  
 Updates a specific task by Id
 
-- DELETE `/tasks/:id`
+- DELETE `/tasks/:id`  
 Deletes a specific task by ID
 
 ## Tasks
