@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"fmt"
 )
 
 type server struct {
@@ -44,6 +46,8 @@ func main() {
 	router.DELETE("/tasks/:id", s.deleteTask)
 
 	s.initializeMongoDB()
+
+	fmt.Println("Listing now!")
 	router.Run(":8080")
 }
 
@@ -56,8 +60,13 @@ func (s *server) initializeMongoDB() {
 		password   string
 	}
 
+	dbURL, ok := os.LookupEnv("MONGO_URL")
+	if !ok {
+		dbURL = "localhost:27017"
+	}
+
 	db := DB{
-		url:        "localhost:27017",
+		url:        dbURL,
 		database:   "to-go",
 		collection: "tasks",
 		user:       "",
