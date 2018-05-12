@@ -27,8 +27,8 @@ func main() {
 	router.GET("/tasks", s.getTasks)
 	router.POST("/tasks", s.createTask)
 	router.GET("/tasks/:id", s.getTask)
-	//router.PUT("/tasks/:id", putTask)
-	//router.DELETE("/tasks/:id", deleteTask)
+	router.PUT("/tasks/:id", s.putTask)
+	router.DELETE("/tasks/:id", s.deleteTask)
 
 	s.initializeMongoDB()
 	router.Run(":8080")
@@ -43,7 +43,7 @@ func (s *server) initializeMongoDB() {
 		password   string
 	}
 
-	db := DB {
+	db := DB{
 		url:        "localhost:27017",
 		database:   "to-go",
 		collection: "tasks",
@@ -112,10 +112,47 @@ func (s *server) createTask(c *gin.Context) {
 	c.JSON(http.StatusOK, task)
 }
 
-/*func putTask(c *gin.Context) {
+func (s *server) putTask(c *gin.Context) {
+	r := c.Request.Body
+	if r != nil {
+		c.Status(http.StatusInternalServerError)
+	}
+	defer r.Close()
 
+	b, err := ioutil.ReadAll(r)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	t := Task{}
+
+	err = json.Unmarshal(b, &t)
+	if err != nil {
+		c.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	id := c.Param("id")
+	if id == "" {
+		c.AbortWithError(http.StatusBadRequest, nil)
+	}
+
+	err, task := s.UpdateTask(id, t)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+	c.JSON(http.StatusOK, task)
 }
 
-func deleteTask(c *gin.Context) {
+func (s *server) deleteTask(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.AbortWithError(http.StatusBadRequest, nil)
+	}
 
-}*/
+	err := s.DeleteTask(id)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+	}
+
+	c.Status(http.StatusNoContent)
+}

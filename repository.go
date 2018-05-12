@@ -45,3 +45,15 @@ func (s *server) InsertTask(t Task) (err error, task Task) {
 	}
 	return nil, t
 }
+
+func (s *server) UpdateTask(id string, t Task) (err error, task Task) {
+	err = s.C.UpdateId(id, task)
+	if err != nil {
+		return err, Task{}
+	}
+	return nil, t
+}
+
+func (s *server) DeleteTask(id string) (err error) {
+	return s.C.RemoveId(id)
+}
