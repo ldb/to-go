@@ -6,7 +6,7 @@ import (
 )
 
 type Task struct {
-	Id          bson.ObjectId `json:"id" bson:"_id"`
+	Id          bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
 	Description string        `json:"description" bson:"description"`
 	Date        time.Time     `json:"date" bson:"date"`
 	Progress    int           `json:"progress" bson:"progress"`
@@ -27,7 +27,7 @@ func (s *server) GetAllTasks() (err error, tasks []Task) {
 func (s *server) FindTask(id string) (err error, task Task) {
 	result := Task{}
 
-	err = s.C.Find(bson.M{"id": bson.ObjectIdHex(id)}).One(&result)
+	err = s.C.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return err, Task{}
 	}
@@ -47,13 +47,13 @@ func (s *server) InsertTask(t Task) (err error, task Task) {
 }
 
 func (s *server) UpdateTask(id string, t Task) (err error, task Task) {
-	err = s.C.UpdateId(id, task)
+	err = s.C.UpdateId(bson.ObjectIdHex(id), t)
 	if err != nil {
 		return err, Task{}
 	}
-	return nil, t
+	return s.FindTask(id)
 }
 
 func (s *server) DeleteTask(id string) (err error) {
-	return s.C.RemoveId(id)
+	return s.C.RemoveId(bson.ObjectIdHex(id))
 }
