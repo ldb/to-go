@@ -2,6 +2,10 @@
 
 Backend for a small ToDo App, using the [Gin Framework](https://github.com/gin-gonic/gin).
 
+# Run
+To build the Docker Image run `./build.sh`.  
+After that you can bring the app up using `docker-compose up`
+
 ## API
 
 The API consists of the following endpoints:
