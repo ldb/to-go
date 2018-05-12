@@ -20,6 +20,13 @@ func main() {
 	s := server{}
 
 	router := gin.Default()
+
+	router.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT")
+		c.Next()
+	})
+
 	router.GET("/health", func(c *gin.Context) {
 		c.Status(http.StatusOK)
 	})
